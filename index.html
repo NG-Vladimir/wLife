@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1a1d2e">
+  <title>Служение</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Экран приветствия - ввод имени -->
+    <section id="welcome-screen" class="screen active">
+      <div class="gradient-bg welcome-bg"></div>
+      <div class="content">
+        <h1 class="title">Добро пожаловать</h1>
+        <p class="subtitle">Как тебя зовут?</p>
+        <div class="input-wrap">
+          <input type="text" id="name-input" placeholder="Введи своё имя" autocomplete="off" maxlength="30">
+          <button type="button" id="enter-btn" class="btn btn-primary">Войти</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Главное меню -->
+    <section id="main-menu-screen" class="screen">
+      <div class="gradient-bg menu-bg"></div>
+      <div class="content">
+        <h2 id="greeting" class="title"></h2>
+        <nav class="main-nav">
+          <button type="button" class="nav-btn" data-screen="schedule">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Расписание
+          </button>
+          <button type="button" class="nav-btn" data-screen="songs">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            Песни
+          </button>
+          <button type="button" class="nav-btn" data-screen="settings">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Настройки
+          </button>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Экран расписания -->
+    <section id="schedule-screen" class="screen">
+      <div class="gradient-bg menu-bg"></div>
+      <div class="content">
+        <button type="button" class="back-btn" data-back>
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Назад
+        </button>
+        <h2 class="title">Расписание</h2>
+        <p class="instruction">Нажми «пусто» — записаться. Нажми свой слот — отменить.</p>
+        <div class="section schedule-section">
+          <div class="calendar-header">
+            <button type="button" id="calendar-prev" class="calendar-nav" aria-label="Предыдущий месяц"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span id="calendar-month"></span>
+            <button type="button" id="calendar-next" class="calendar-nav" aria-label="Следующий месяц"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          </div>
+          <div class="schedule-expand-btns">
+            <button type="button" id="expand-all-btn" class="expand-btn">Развернуть всё</button>
+            <button type="button" id="collapse-all-btn" class="expand-btn">Свернуть всё</button>
+          </div>
+          <div id="schedule-list" class="schedule-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Экран песен - список папок -->
+    <section id="songs-screen" class="screen">
+      <div class="gradient-bg menu-bg"></div>
+      <div class="content">
+        <button type="button" class="back-btn" data-back>
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Назад
+        </button>
+        <h2 class="title">Песни</h2>
+        <p class="songs-folder-label">Общие папки — все видят</p>
+        <div id="folders-list" class="folders-list"></div>
+        <button type="button" id="add-folder-btn" class="btn btn-secondary">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Добавить папку
+        </button>
+      </div>
+    </section>
+
+    <!-- Модальное окно выбора песен для дня -->
+    <div id="schedule-songs-modal" class="modal">
+      <div class="modal-content modal-content-wide">
+        <h3 class="modal-title" id="schedule-songs-title">Песни на служение</h3>
+        <p class="modal-hint">Отметь песни, которые будут петься</p>
+        <div id="schedule-songs-list" class="schedule-songs-list"></div>
+        <div class="modal-actions">
+          <button type="button" id="schedule-songs-cancel" class="btn btn-secondary">Отмена</button>
+          <button type="button" id="schedule-songs-save" class="btn btn-primary">Сохранить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно подтверждения удаления папки -->
+    <div id="folder-delete-modal" class="modal">
+      <div class="modal-content">
+        <h3 class="modal-title">Удалить папку?</h3>
+        <p class="modal-text">Все песни в папке будут удалены. Это нельзя отменить.</p>
+        <div class="modal-actions">
+          <button type="button" id="folder-delete-cancel" class="btn btn-secondary">Отмена</button>
+          <button type="button" id="folder-delete-confirm" class="btn btn-primary">Удалить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно создания папки -->
+    <div id="folder-modal" class="modal">
+      <div class="modal-content">
+        <h3 class="modal-title">Новая папка</h3>
+        <label>Название папки</label>
+        <input type="text" id="folder-name-input" placeholder="Введи название папки">
+        <p class="modal-hint" id="folder-created-by"></p>
+        <div class="modal-actions">
+          <button type="button" id="folder-modal-cancel" class="btn btn-secondary">Отмена</button>
+          <button type="button" id="folder-modal-save" class="btn btn-primary">Создать</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Экран папки - песни внутри -->
+    <section id="folder-screen" class="screen">
+      <div class="gradient-bg menu-bg"></div>
+      <div class="content">
+        <button type="button" class="back-btn" data-back-to-folders>
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Назад
+        </button>
+        <h2 class="title" id="folder-title">Папка</h2>
+        <input type="text" id="song-search-input" class="song-search" placeholder="Поиск по песням...">
+        <div id="songs-list" class="songs-list"></div>
+        <button type="button" id="add-song-btn" class="btn btn-secondary">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Добавить песню
+        </button>
+      </div>
+    </section>
+
+    <!-- Просмотр песни (как на holychords) -->
+    <div id="song-view-modal" class="modal song-view-modal">
+      <div class="song-view-content">
+        <div class="song-view-header">
+          <h2 class="song-view-title" id="song-view-title"></h2>
+          <button type="button" class="song-view-close" id="song-view-close" aria-label="Закрыть">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="song-view-toolbar">
+          <div class="song-view-controls">
+            <div class="song-view-zoom">
+              <button type="button" id="song-zoom-out">A−</button>
+              <span id="song-zoom-value">100%</span>
+              <button type="button" id="song-zoom-in">A+</button>
+            </div>
+            <div class="song-view-transpose">
+              <button type="button" id="transpose-down" title="На тон ниже">−1</button>
+              <span id="transpose-value">0</span>
+              <button type="button" id="transpose-up" title="На тон выше">+1</button>
+            </div>
+            <div class="song-view-chord-pos" title="Положение аккордов">
+              <button type="button" id="chord-pos-btn" class="chord-pos-btn" data-pos="above">Аккорды сверху</button>
+            </div>
+            <div class="song-view-columns">
+              <button type="button" class="col-btn active" data-cols="1">1 кол.</button>
+              <button type="button" class="col-btn" data-cols="2">2 кол.</button>
+              <button type="button" class="col-btn" data-cols="3">3 кол.</button>
+            </div>
+          </div>
+          <div class="song-view-actions">
+            <button type="button" id="song-edit-btn" class="btn-copy">Редактировать</button>
+            <button type="button" id="song-copy-btn" class="btn-copy">Копировать</button>
+          </div>
+        </div>
+        <div class="song-view-body" id="song-view-body"></div>
+      </div>
+    </div>
+
+    <!-- Модальное окно добавления песни -->
+    <div id="song-modal" class="modal">
+      <div class="modal-content">
+        <h3 class="modal-title">Новая песня</h3>
+        <label>Название</label>
+        <input type="text" id="song-title-input" placeholder="Название песни">
+        <label>Текст песни</label>
+        <p class="modal-hint">Вставь с holychords.pro — название, аккорды, слова</p>
+        <textarea id="song-lyrics-input" placeholder="Вставь текст с аккордами..." rows="10"></textarea>
+        <div class="modal-actions">
+          <button type="button" id="song-modal-cancel" class="btn btn-secondary">Отмена</button>
+          <button type="button" id="song-modal-save" class="btn btn-primary">Сохранить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Экран настроек -->
+    <section id="settings-screen" class="screen">
+      <div class="gradient-bg menu-bg"></div>
+      <div class="content">
+        <button type="button" class="back-btn" data-back>
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Назад
+        </button>
+        <h2 class="title">Настройки</h2>
+        <div class="settings-list">
+          <div class="settings-item">
+            <label>Роли служения</label>
+            <p class="settings-hint">Ведёт, Клавишник, Барабанщик, Гитарист, Бэк-вокалист (3 человека)</p>
+          </div>
+          <div class="settings-item">
+            <label>Дни служения</label>
+            <p class="settings-hint">Вторник и Воскресенье</p>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-primary">Выйти</button>
+          <button type="button" id="clear-data-btn" class="btn btn-secondary">Очистить все данные</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

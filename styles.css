@@ -1,0 +1,1228 @@
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-dark: #1a1d2e;
+  --bg-card: #252836;
+  --accent-orange: #ff6b35;
+  --accent-teal: #00d9a5;
+  --accent-purple: #7c3aed;
+  --text-light: #e8e8e8;
+  --text-muted: #8b8fa3;
+  --radius: 16px;
+  --shadow-soft: 8px 8px 16px rgba(0, 0, 0, 0.3), -4px -4px 12px rgba(255, 255, 255, 0.03);
+  --shadow-press: inset 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.app {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Screens */
+.screen {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  padding: 2rem 1.5rem;
+  padding-bottom: 4rem;
+  overflow-y: auto;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+/* Gradient backgrounds */
+.gradient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.welcome-bg {
+  background: linear-gradient(180deg, 
+    #2d3a4f 0%, 
+    #1e2433 40%, 
+    #1a1d2e 70%,
+    #151724 100%
+  );
+}
+
+.welcome-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255, 107, 53, 0.15) 0%, transparent 60%);
+}
+
+.menu-bg {
+  background: linear-gradient(180deg, 
+    #1e2a3d 0%, 
+    #1a1d2e 30%,
+    #151724 100%
+  );
+}
+
+.menu-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0, 217, 165, 0.12) 0%, transparent 70%);
+}
+
+/* Content */
+.content {
+  width: 100%;
+  max-width: 420px;
+  animation: fadeIn 0.5s ease;
+}
+
+#main-menu-screen .content,
+#schedule-screen .content,
+#songs-screen .content,
+#folder-screen .content,
+#settings-screen .content {
+  align-items: stretch;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Input - Soft UI */
+.input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#name-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: var(--text-light);
+  background: var(--bg-card);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+#name-input::placeholder {
+  color: var(--text-muted);
+}
+
+#name-input:focus {
+  outline: none;
+  box-shadow: var(--shadow-soft), 0 0 0 2px rgba(0, 217, 165, 0.4);
+}
+
+/* Buttons */
+.btn {
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-orange), #e85a2a);
+  color: white;
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.45);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-large {
+  width: 100%;
+  padding: 1.25rem;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+/* Menu screen */
+/* Главное меню */
+.main-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-light);
+  background: var(--bg-card);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-soft);
+  font-family: inherit;
+}
+
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.nav-btn:hover {
+  background: #2d3142;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 217, 165, 0.2);
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  align-self: flex-start;
+}
+
+.back-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.back-btn:hover {
+  color: var(--accent-teal);
+}
+
+/* Песни */
+.songs-folder-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: -0.5rem 0 0.75rem;
+}
+
+.folders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  min-height: 80px;
+}
+
+.folder-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.folder-item:hover {
+  background: #2d3142;
+}
+
+.folder-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.folder-count,
+.folder-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.folder-delete {
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.folder-delete:hover {
+  color: var(--accent-orange);
+  background: rgba(255, 107, 53, 0.15);
+}
+
+.folder-delete svg {
+  width: 16px;
+  height: 16px;
+}
+
+.song-search {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  background: var(--bg-card);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 1rem;
+}
+
+.song-search::placeholder {
+  color: var(--text-muted);
+}
+
+.song-search:focus {
+  outline: none;
+  box-shadow: var(--shadow-soft), 0 0 0 2px rgba(0, 217, 165, 0.3);
+}
+
+.songs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  min-height: 120px;
+}
+
+.song-item {
+  padding: 1rem;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.song-item:hover {
+  background: #2d3142;
+}
+
+.song-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.song-title {
+  font-weight: 600;
+}
+
+.song-lyrics {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: pre-wrap;
+  margin: 0;
+  line-height: 1.4;
+  max-height: 4em;
+  overflow: hidden;
+}
+
+/* Просмотр песни — стиль holychords */
+.song-view-modal .song-view-content {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  max-width: 720px;
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.song-view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.song-view-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.song-view-close {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.song-view-close:hover {
+  color: var(--text-light);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.song-view-close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.song-view-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.song-view-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.song-view-zoom {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.song-view-columns {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.col-btn {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  background: var(--bg-dark);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.col-btn:hover {
+  color: var(--text-light);
+  background: #2d3142;
+}
+
+.col-btn.active {
+  background: rgba(0, 217, 165, 0.2);
+  color: var(--accent-teal);
+  border-color: var(--accent-teal);
+}
+
+.song-view-zoom button {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.9rem;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.song-view-zoom button:hover {
+  background: #2d3142;
+}
+
+.song-view-zoom span {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  min-width: 3rem;
+}
+
+.song-view-transpose {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.song-view-transpose button {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.song-view-transpose button:hover {
+  background: #2d3142;
+}
+
+.song-view-chord-pos {
+  display: flex;
+  align-items: center;
+}
+
+.chord-pos-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-light);
+  padding: 0.3em 0.5em;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.chord-pos-btn:hover {
+  background: var(--bg-hover);
+}
+
+.song-view-transpose span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.btn-copy {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  background: rgba(0, 217, 165, 0.2);
+  color: var(--accent-teal);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-copy:hover {
+  background: rgba(0, 217, 165, 0.3);
+}
+
+.song-view-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.song-view-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  user-select: text;
+  -webkit-user-select: text;
+  line-height: 1.6;
+  font-size: 1rem;
+  transition: font-size 0.2s;
+}
+
+.song-view-body.columns-1 {
+  column-count: 1;
+  column-gap: 2rem;
+}
+
+.song-view-body.columns-2 {
+  column-count: 2;
+  column-gap: 2rem;
+}
+
+.song-view-body.columns-3 {
+  column-count: 3;
+  column-gap: 1.5rem;
+}
+
+.song-line {
+  margin-bottom: 0.15em;
+  break-inside: avoid;
+}
+
+.song-line-break {
+  height: 0.8em;
+  margin-bottom: 0;
+}
+
+.chord-lyric-block {
+  display: flex;
+  flex-direction: column;
+  break-inside: avoid;
+  margin-bottom: 0.25em;
+}
+
+.song-view-body.chords-below .chord-lyric-block {
+  flex-direction: column-reverse;
+}
+
+.chord-line {
+  color: var(--accent-teal);
+  font-weight: 600;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 0.95em;
+  margin-bottom: 0.35em;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  white-space: pre;
+}
+
+.chords-below .chord-line {
+  margin-bottom: 0;
+  margin-top: 0.35em;
+}
+
+.lyric-line {
+  color: var(--text-light);
+  margin-bottom: 0.5em;
+}
+
+.chords-below .lyric-line {
+  margin-bottom: 0;
+  margin-top: 0.5em;
+}
+
+/* Модальное окно */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-title {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.modal-content label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0.75rem 0 0.25rem;
+  color: var(--text-muted);
+}
+
+.modal-content label:first-of-type {
+  margin-top: 0;
+}
+
+.modal-content input,
+.modal-content textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--text-light);
+  background: var(--bg-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-family: inherit;
+}
+
+.modal-content textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+
+.modal-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0.5rem 0 0;
+}
+
+.modal-text {
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+}
+
+.song-delete {
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.song-delete svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.5rem;
+}
+
+#add-song-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot-cancel-hint .cancel-icon {
+  width: 12px;
+  height: 12px;
+  vertical-align: -2px;
+  margin-right: 0.2rem;
+}
+
+.song-delete:hover {
+  color: var(--accent-orange);
+  background: rgba(255, 107, 53, 0.15);
+}
+
+/* Настройки */
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.settings-item {
+  padding: 1rem;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.settings-item label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.settings-hint {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-light);
+  box-shadow: var(--shadow-soft);
+  margin-top: 0.5rem;
+}
+
+#logout-btn {
+  margin-bottom: 0.5rem;
+}
+
+.btn-secondary:hover {
+  background: #2d3142;
+}
+
+.empty-message {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.instruction {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.section {
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+/* Options list - gradient card style */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Календарь header в расписании */
+.schedule-section .calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.schedule-section .calendar-header span {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-light);
+}
+
+/* Календарь (если остался) */
+.calendar-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.calendar-header span {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-light);
+}
+
+.calendar-nav {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.calendar-nav svg {
+  width: 20px;
+  height: 20px;
+}
+
+.calendar-nav:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-light);
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  min-height: 180px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  max-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  border-radius: 10px;
+  color: var(--text-muted);
+}
+
+.calendar-day.other-month {
+  opacity: 0.35;
+}
+
+.calendar-day.today {
+  background: rgba(124, 58, 237, 0.3);
+  color: white;
+  font-weight: 600;
+}
+
+.calendar-day.service-day {
+  background: linear-gradient(135deg, rgba(0, 217, 165, 0.35), rgba(255, 107, 53, 0.25));
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+
+.calendar-day.today.service-day {
+  background: linear-gradient(135deg, var(--accent-teal), var(--accent-orange));
+  color: white;
+}
+
+/* Расписание */
+.schedule-section {
+  width: 100%;
+  max-width: 420px;
+}
+
+.schedule-expand-btns {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.expand-btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.expand-btn:hover {
+  color: var(--accent-teal);
+  border-color: rgba(0, 217, 165, 0.3);
+}
+
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.schedule-day-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.schedule-day-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--accent-teal);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.schedule-day-toggle:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.schedule-day-label {
+  flex: 1;
+}
+
+.schedule-day-chevron {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: transform 0.25s;
+}
+
+.schedule-day-card.expanded .schedule-day-chevron {
+  transform: rotate(180deg);
+}
+
+.schedule-day-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease-out;
+}
+
+.schedule-day-card.expanded .schedule-day-body {
+  grid-template-rows: 1fr;
+}
+
+.schedule-day-body-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.schedule-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.schedule-slot {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  transition: background 0.2s;
+  flex-wrap: wrap;
+}
+
+.schedule-slot.slot-filled {
+  background: rgba(0, 217, 165, 0.08);
+}
+
+.schedule-slot.slot-mine {
+  background: rgba(255, 107, 53, 0.15);
+  cursor: pointer;
+}
+
+.schedule-slot.slot-mine:hover {
+  background: rgba(255, 107, 53, 0.25);
+}
+
+.schedule-slot.slot-mine .slot-cancel-hint {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.schedule-slot.slot-mine:hover .slot-cancel-hint {
+  color: var(--accent-orange);
+}
+
+.schedule-slot.slot-empty {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.schedule-slot.slot-empty:hover {
+  background: rgba(0, 217, 165, 0.12);
+  color: var(--accent-teal);
+}
+
+.slot-role {
+  font-weight: 500;
+  min-width: 5rem;
+  color: var(--text-muted);
+}
+
+.slot-empty .slot-role {
+  color: var(--text-muted);
+}
+
+.slot-filled .slot-role {
+  color: var(--text-light);
+}
+
+.slot-value {
+  flex: 1;
+}
+
+.slot-empty .slot-value {
+  font-style: italic;
+}
+
+.schedule-day-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.schedule-day-btn {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  background: var(--bg-card);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.schedule-day-btn:hover {
+  background: rgba(0, 217, 165, 0.15);
+  color: var(--accent-teal);
+}
+
+.modal-content-wide {
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content-wide .modal-actions {
+  flex-shrink: 0;
+}
+
+.schedule-songs-list {
+  overflow-y: auto;
+  max-height: 50vh;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.schedule-song-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  color: var(--text-light);
+}
+
+.schedule-song-item input {
+  flex-shrink: 0;
+  accent-color: var(--accent-teal);
+}
+
+.option-item {
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-light);
+  background: var(--bg-card);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-soft);
+  font-family: inherit;
+}
+
+.option-item:hover {
+  background: #2d3142;
+  transform: translateY(-1px);
+}
+
+.option-item.selected {
+  background: linear-gradient(135deg, rgba(0, 217, 165, 0.25), rgba(124, 58, 237, 0.25));
+  box-shadow: 0 0 0 2px var(--accent-teal);
+  color: var(--accent-teal);
+}
+
+.option-item[data-role].selected,
+.option-item[data-day].selected {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.25), rgba(0, 217, 165, 0.2));
+  box-shadow: 0 0 0 2px var(--accent-orange);
+  color: var(--accent-teal);
+}
+
+/* Responsive */
+@media (min-width: 480px) {
+  .calendar-day {
+    max-height: 40px;
+  }
+}
+
+@media (min-width: 600px) {
+  .screen {
+    padding: 3rem 2rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+}

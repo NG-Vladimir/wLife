@@ -52,6 +52,7 @@ const clearDataBtn = document.getElementById('clear-data-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const scheduleSongsModal = document.getElementById('schedule-songs-modal');
 const scheduleSongsTitle = document.getElementById('schedule-songs-title');
+const scheduleSongsSearch = document.getElementById('schedule-songs-search');
 const scheduleSongsList = document.getElementById('schedule-songs-list');
 const scheduleSongsCancel = document.getElementById('schedule-songs-cancel');
 const scheduleSongsSave = document.getElementById('schedule-songs-save');
@@ -329,16 +330,30 @@ function openScheduleSongsModal(dateKey) {
   const date = new Date(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10));
   const dayName = date.getDay() === 0 ? 'Воскресенье' : 'Вторник';
   scheduleSongsTitle.textContent = `Песни — ${dayName}, ${d} ${MONTHS_GEN[parseInt(m, 10) - 1]} ${y}`;
-  const allSongs = getAllSongs();
+  if (scheduleSongsSearch) scheduleSongsSearch.value = '';
+  const allSongs = getAllSongs().slice().sort((a, b) => (a.title || '').localeCompare(b.title || '', 'ru'));
   const selected = new Set(getScheduleSongs(dateKey));
   scheduleSongsList.innerHTML = allSongs.length === 0
     ? '<p class="empty-message">Нет песен. Добавь песни в папках.</p>'
     : allSongs.map(s => {
         const checked = selected.has(s.title);
-        return `<label class="schedule-song-item"><input type="checkbox" value="${escapeHtml(s.title)}" ${checked ? 'checked' : ''}> ${escapeHtml(s.title)}</label>`;
+        return `<label class="schedule-song-item" data-title="${escapeHtml(s.title)}"><input type="checkbox" value="${escapeHtml(s.title)}" ${checked ? 'checked' : ''}> ${escapeHtml(s.title)}</label>`;
       }).join('');
   scheduleSongsModal.classList.add('active');
+  filterScheduleSongsList();
 }
+
+function filterScheduleSongsList() {
+  if (!scheduleSongsList || !scheduleSongsSearch) return;
+  const q = scheduleSongsSearch.value.trim().toLowerCase();
+  const items = scheduleSongsList.querySelectorAll('.schedule-song-item');
+  items.forEach(label => {
+    const title = (label.dataset.title || label.textContent || '').toLowerCase();
+    label.style.display = !q || title.includes(q) ? '' : 'none';
+  });
+}
+
+if (scheduleSongsSearch) scheduleSongsSearch.addEventListener('input', filterScheduleSongsList);
 
 function closeScheduleSongsModal() {
   if (scheduleSongsModal) scheduleSongsModal.classList.remove('active');

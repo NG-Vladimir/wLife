@@ -19,7 +19,7 @@
 }
 
 html {
-  padding: max(1rem, env(safe-area-inset-top)) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding: max(1.5rem, env(safe-area-inset-top) + 0.5rem) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 body {
@@ -41,7 +41,7 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   position: relative;
-  padding: 2rem 1.5rem 4rem;
+  padding: 2.5rem 1.5rem 4rem;
   overflow-y: auto;
 }
 
@@ -119,6 +119,10 @@ body {
   align-items: stretch;
 }
 
+#main-menu-screen .title {
+  margin-bottom: 1.5rem;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -127,7 +131,7 @@ body {
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
+  margin: 0 0 1rem;
   letter-spacing: -0.02em;
   line-height: 1.3;
 }
@@ -250,7 +254,7 @@ body {
   align-items: center;
   gap: 0.35rem;
   padding: 0.5rem 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.25rem;
   font-size: 0.9rem;
   color: var(--text-muted);
   background: none;
@@ -724,7 +728,9 @@ body {
 }
 
 .modal-actions .btn {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0.75rem 1rem;
 }
 
 .modal-hint {
@@ -833,7 +839,7 @@ body {
 .instruction {
   color: var(--text-muted);
   font-size: 0.95rem;
-  margin-bottom: 1.5rem;
+  margin: 0.25rem 0 1.5rem;
   line-height: 1.5;
 }
 
@@ -1170,9 +1176,30 @@ body {
   flex-shrink: 0;
 }
 
+.schedule-songs-search {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  background: var(--bg-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.schedule-songs-search::placeholder {
+  color: var(--text-muted);
+}
+
+.schedule-songs-search:focus {
+  outline: none;
+  border-color: var(--accent-teal);
+}
+
 .schedule-songs-list {
   overflow-y: auto;
-  max-height: 50vh;
+  max-height: 45vh;
   margin: 0.5rem 0;
   display: flex;
   flex-direction: column;
@@ -1182,15 +1209,20 @@ body {
 .schedule-song-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   padding: 0.5rem 0;
   cursor: pointer;
   color: var(--text-light);
+  line-height: 1.4;
 }
 
 .schedule-song-item input {
   flex-shrink: 0;
+  margin: 0;
+  width: 1.15em;
+  height: 1.15em;
   accent-color: var(--accent-teal);
+  align-self: center;
 }
 
 .option-item {

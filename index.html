@@ -225,6 +225,13 @@
             <label>Дни служения</label>
             <p class="settings-hint">Вторник и Воскресенье</p>
           </div>
+          <div class="settings-item" id="telegram-settings">
+            <label>Telegram для рассылки</label>
+            <p class="settings-hint">URL API (Vercel) и связь имён с @username. Пример: Владимир → vladimir_tg</p>
+            <input type="text" id="telegram-api-url" placeholder="https://ваш-проект.vercel.app" style="margin-bottom:0.75rem;">
+            <div id="telegram-map-list"></div>
+            <button type="button" id="add-telegram-map-btn" class="btn btn-secondary btn-small">+ Добавить</button>
+          </div>
           <button type="button" id="logout-btn" class="btn btn-primary">Выйти</button>
           <button type="button" id="clear-data-btn" class="btn btn-secondary">Очистить все данные</button>
         </div>

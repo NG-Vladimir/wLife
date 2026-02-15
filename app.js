@@ -93,6 +93,8 @@ const USER_KEY = 'sluzhenie-user';
 const SCHEDULE_EXPANDED_KEY = 'sluzhenie-schedule-expanded';
 const CHORD_POS_KEY = 'sluzhenie-chord-pos';
 const SCHEDULE_SONGS_KEY = 'sluzhenie-schedule-songs';
+const TELEGRAM_MAP_KEY = 'sluzhenie-telegram-map';
+const TELEGRAM_API_KEY = 'sluzhenie-telegram-api';
 
 function getSchedule() {
   try {
@@ -130,6 +132,25 @@ function setScheduleSongs(dateKey, titles) {
     obj[dateKey] = Array.isArray(titles) ? titles : [];
     localStorage.setItem(SCHEDULE_SONGS_KEY, JSON.stringify(obj));
   } catch {}
+}
+
+function getTelegramMap() {
+  try {
+    const d = localStorage.getItem(TELEGRAM_MAP_KEY);
+    return d ? JSON.parse(d) : {};
+  } catch {
+    return {};
+  }
+}
+
+function setTelegramMap(map) {
+  try {
+    localStorage.setItem(TELEGRAM_MAP_KEY, JSON.stringify(map));
+  } catch {}
+}
+
+function getTelegramApiUrl() {
+  return localStorage.getItem(TELEGRAM_API_KEY) || '';
 }
 
 function getAllSongs() {
@@ -396,15 +417,74 @@ function buildScheduleText(dateKey) {
   return parts.join('\n');
 }
 
-function sendScheduleToBot(dateKey) {
+function getParticipantsForDate(dateKey) {
+  const s = getSchedule();
+  const personRoles = {};
+  for (const role of ROLES) {
+    const slots = role.slots || 1;
+    for (let i = 0; i < slots; i++) {
+      const roleId = slots > 1 ? `${role.id}-${i + 1}` : role.id;
+      const label = slots > 1 ? `${role.label} ${i + 1}` : role.label;
+      const name = (s[`${dateKey}-${roleId}`] || '').trim();
+      if (name) {
+        if (!personRoles[name]) personRoles[name] = [];
+        personRoles[name].push(label);
+      }
+    }
+  }
+  return personRoles;
+}
+
+function buildPersonalMessage(dateKey, personName, roles) {
+  const [y, m, d] = dateKey.split('-');
+  const date = new Date(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10));
+  const dayName = date.getDay() === 0 ? 'Воскресенье' : 'Вторник';
+  const dateStr = `${dayName}, ${d} ${MONTHS_GEN[parseInt(m, 10) - 1]} ${y}`;
+  const fullText = buildScheduleText(dateKey);
+  return `Привет, ${personName}!\n\n${dateStr}\nТвои роли: ${roles.join(', ')}\n\n───\n${fullText}`;
+}
+
+async function sendScheduleToBot(dateKey) {
+  const apiUrl = getTelegramApiUrl().replace(/\/$/, '');
+  const map = getTelegramMap();
+  const participants = getParticipantsForDate(dateKey);
+  const messages = [];
+  for (const [name, roles] of Object.entries(participants)) {
+    const n = name.trim();
+    let username = map[n];
+    if (!username) {
+      const key = Object.keys(map).find(k => k.trim().toLowerCase() === n.toLowerCase());
+      if (key) username = map[key];
+    }
+    if (username && username.trim()) {
+      const text = buildPersonalMessage(dateKey, name, roles);
+      messages.push({ chatId: username.trim().startsWith('@') ? username.trim() : username.trim(), text });
+    }
+  }
+  if (apiUrl && messages.length > 0) {
+    try {
+      const r = await fetch(apiUrl + '/api/send-telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages })
+      });
+      const data = await r.json();
+      if (data.ok) {
+        alert(`Отправлено ${messages.length} участникам.`);
+        return;
+      }
+      const failed = (data.results || []).filter(x => !x.ok);
+      if (failed.length > 0) {
+        alert(`Часть не доставлена:\n${failed.map(f => f.chatId + ': ' + (f.error || '')).join('\n')}\n\nПроверь @username в настройках.`);
+      }
+    } catch (e) {
+      alert('Ошибка отправки: ' + (e.message || 'нет связи') + '\n\nПроверь URL API в настройках.');
+      return;
+    }
+  }
   const text = buildScheduleText(dateKey);
   if (navigator.share) {
-    navigator.share({
-      title: 'Состав служения',
-      text: text
-    }).catch(() => {
-      copyAndNotify(text);
-    });
+    navigator.share({ title: 'Состав служения', text }).catch(() => copyAndNotify(text));
   } else {
     copyAndNotify(text);
   }
@@ -799,11 +879,57 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
       if (screenId === 'schedule-screen') {
         currentCalendarDate = new Date();
         renderSchedule();
-      } else       if (screenId === 'songs-screen') {
+      } else if (screenId === 'songs-screen') {
         renderFolders();
+      } else if (screenId === 'settings-screen') {
+        renderTelegramSettings();
       }
     }
   });
+});
+
+function renderTelegramSettings() {
+  const listEl = document.getElementById('telegram-map-list');
+  const apiUrlEl = document.getElementById('telegram-api-url');
+  if (apiUrlEl) apiUrlEl.value = getTelegramApiUrl();
+  if (!listEl) return;
+  const map = getTelegramMap();
+  listEl.innerHTML = Object.entries(map).map(([name, username]) =>
+    `<div class="telegram-map-row"><input type="text" value="${escapeHtml(name)}" readonly class="telegram-map-name">
+     <span>→</span><input type="text" value="${escapeHtml(username)}" placeholder="@username" class="telegram-map-user" data-name="${escapeHtml(name)}">
+     <button type="button" class="telegram-map-del" data-name="${escapeHtml(name)}">×</button></div>`
+  ).join('');
+  listEl.querySelectorAll('.telegram-map-user').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const m = getTelegramMap();
+      m[inp.dataset.name] = inp.value.trim().replace(/^@/, '');
+      setTelegramMap(m);
+    });
+  });
+  listEl.querySelectorAll('.telegram-map-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const m = getTelegramMap();
+      delete m[btn.dataset.name];
+      setTelegramMap(m);
+      renderTelegramSettings();
+    });
+  });
+}
+
+const telegramApiUrlEl = document.getElementById('telegram-api-url');
+if (telegramApiUrlEl) telegramApiUrlEl.addEventListener('change', () => {
+  localStorage.setItem(TELEGRAM_API_KEY, telegramApiUrlEl.value.trim());
+});
+
+const addTelegramMapBtn = document.getElementById('add-telegram-map-btn');
+if (addTelegramMapBtn) addTelegramMapBtn.addEventListener('click', () => {
+  const name = prompt('Имя (как в расписании):');
+  if (name && name.trim()) {
+    const m = getTelegramMap();
+    m[name.trim()] = '';
+    setTelegramMap(m);
+    renderTelegramSettings();
+  }
 });
 
 document.querySelectorAll('.back-btn[data-back]').forEach(btn => {

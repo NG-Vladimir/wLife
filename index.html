@@ -188,17 +188,21 @@
     </div>
 
     <!-- Модальное окно добавления песни -->
-    <div id="song-modal" class="modal">
-      <div class="modal-content">
-        <h3 class="modal-title">Новая песня</h3>
-        <label>Название</label>
-        <input type="text" id="song-title-input" placeholder="Название песни">
-        <label>Текст песни</label>
-        <p class="modal-hint">Вставь с holychords.pro — название, аккорды, слова</p>
-        <textarea id="song-lyrics-input" placeholder="Вставь текст с аккордами..." rows="10"></textarea>
-        <div class="modal-actions">
-          <button type="button" id="song-modal-cancel" class="btn btn-secondary">Отмена</button>
-          <button type="button" id="song-modal-save" class="btn btn-primary">Сохранить</button>
+    <div id="song-modal" class="modal song-form-modal">
+      <div class="modal-content song-form-content">
+        <div class="song-form-header">
+          <h3 class="modal-title">Новая песня</h3>
+          <div class="song-form-actions">
+            <button type="button" id="song-modal-cancel" class="btn btn-secondary btn-compact">Отмена</button>
+            <button type="button" id="song-modal-save" class="btn btn-primary btn-compact">Сохранить</button>
+          </div>
+        </div>
+        <div class="song-form-body">
+          <label>Название</label>
+          <input type="text" id="song-title-input" placeholder="Название песни">
+          <label>Текст песни</label>
+          <p class="modal-hint">Вставь с holychords.pro — название, аккорды, слова</p>
+          <textarea id="song-lyrics-input" placeholder="Вставь текст с аккордами..."></textarea>
         </div>
       </div>
     </div>

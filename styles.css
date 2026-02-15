@@ -665,13 +665,11 @@ body {
   display: none;
   position: fixed;
   inset: 0;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
   z-index: 100;
   background: rgba(0, 0, 0, 0.6);
   align-items: center;
   justify-content: center;
-  padding: 1rem;
 }
 
 .modal.active {
@@ -719,6 +717,86 @@ body {
 .modal-content textarea {
   resize: vertical;
   min-height: 120px;
+}
+
+/* Модальное окно песни — удобный ввод на мобильных */
+.song-form-modal {
+  align-items: stretch;
+  padding: max(0.5rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+}
+
+.song-form-modal .modal-content {
+  max-width: 500px;
+  max-height: 90vh;
+  max-height: 90dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.song-form-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.song-form-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.song-form-header .modal-title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.song-form-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.btn-compact {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+.song-form-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.25rem;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+}
+
+.song-form-body label {
+  margin-top: 1rem;
+}
+
+.song-form-body label:first-of-type {
+  margin-top: 0;
+}
+
+.song-form-body #song-lyrics-input {
+  flex: 1;
+  min-height: 200px;
+  margin-top: 0.5rem;
+  resize: none;
+}
+
+@media (min-height: 500px) {
+  .song-form-body #song-lyrics-input {
+    min-height: 260px;
+  }
 }
 
 .modal-actions {

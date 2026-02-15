@@ -950,6 +950,12 @@ songModal?.addEventListener('click', (e) => {
   if (e.target === songModal) songModal.classList.remove('active');
 });
 
+if (songLyricsInput) songLyricsInput.addEventListener('focus', () => {
+  setTimeout(() => {
+    songLyricsInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+});
+
 // Выйти
 if (logoutBtn) logoutBtn.addEventListener('click', () => {
   if (confirm('Выйти? При следующем входе нужно будет ввести имя снова.')) {
